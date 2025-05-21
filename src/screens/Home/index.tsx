@@ -22,10 +22,12 @@ export default function HomeScreen({ navigation }: any) {
                 {/* Cards de resumo */}
                 <View style={styles.summaryContainer}>
                     <View style={styles.card}>
+                        <FontAwesome5 name="hospital-user" color="#000" size={30}/>
                         <Text style={styles.cardNumber}>1.245</Text>
                         <Text style={styles.cardLabel}>Qtd. Beneficiários</Text>
                     </View>
                     <View style={styles.card}>
+                        <FontAwesome5 name="procedures" color="#000" size={30}/>
                         <Text style={styles.cardNumber}>17</Text>
                         <Text style={styles.cardLabel}>Qtd. Tratamentos</Text>
                     </View>
@@ -35,12 +37,18 @@ export default function HomeScreen({ navigation }: any) {
                 <View style={styles.managementContainer}>
                     <Text style={styles.sectionTitle}>GERENCIAMENTO</Text>
                     {/* View somente para deixar em row */}
-                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly'}}>
-                        <TouchableOpacity style={styles.managementButton}>
+                    <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                        <TouchableOpacity
+                            style={styles.managementButton}
+                            onPress={() => navigation.navigate('Beneficiarios')}
+                        >
                             <Image source={require('../../assets/beneficiario.png')} style={styles.icon} />
                             <Text style={styles.managementText}>BENEFICIÁRIOS</Text>
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.managementButton}>
+                        <TouchableOpacity
+                            style={styles.managementButton}
+                            onPress={() => navigation.navigate('Tratamentos')}
+                        >
                             <Image source={require('../../assets/tratamento.png')} style={styles.icon} />
                             <Text style={styles.managementText}>TRATAMENTOS</Text>
                         </TouchableOpacity>
@@ -150,13 +158,13 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#204280',
     },
-    
+
     managementContainer: {
         flexDirection: 'column',
         justifyContent: 'space-around',
         marginBottom: 20,
         backgroundColor: '#CBE1FF',
-        paddingBottom:25,
+        paddingBottom: 25,
         borderRadius: 25,
         elevation: 5,
     },

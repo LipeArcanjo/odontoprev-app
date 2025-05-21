@@ -7,6 +7,9 @@ import Login from '../screens/Login';
 import Home from '../screens/Home';
 import DataVision from '../screens/DataVision';
 import Members from '../screens/Members';
+import Beneficiarios from '@/screens/Beneficiarios';
+import BeneficiariosData from '@/screens/Beneficiarios/BeneficiariosData';
+import BeneficiariosCadastro from '@/screens/Beneficiarios/BeneficiariosCadastro';
 
 import BottomNav from '../components/BottomNav';
 
@@ -32,12 +35,15 @@ export default function AppNavigator() {
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="Login" component={Login} />
 
-        {/* Páginas com menu fixo */}
+        {/* Páginas com bottom nav menu */}
         <Stack.Screen name="Home" component={ScreenWithNav(Home)} />
         <Stack.Screen name="DataVision" component={ScreenWithNav(DataVision)} />
         <Stack.Screen name="Members" component={ScreenWithNav(Members)} />
-        
+        <Stack.Screen name="Beneficiarios" component={ScreenWithNav(Beneficiarios)} />
+        <Stack.Screen name="BeneficiariosData" component={ScreenWithNav(BeneficiariosData)} />
+        <Stack.Screen name="BeneficiariosCadastro" component={ScreenWithNav(BeneficiariosCadastro)} />
         {/* Ir adicionado aqui o resto, conforme a implementação de novas telas */}
+
       </Stack.Navigator>
     </NavigationContainer>
   );
