@@ -116,6 +116,7 @@ const styles = StyleSheet.create({
         marginVertical: 20,
         backgroundColor: '#63B4FF',
         borderRadius: 25,
+        elevation: 5,
     },
 
     card: {
@@ -126,9 +127,7 @@ const styles = StyleSheet.create({
         borderRadius: 10,
         alignItems: 'flex-start',
         justifyContent: 'center',
-        elevation: 2,
         height: 130,
-
     },
 
     cardNumber: {
@@ -159,6 +158,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#CBE1FF',
         paddingBottom:25,
         borderRadius: 25,
+        elevation: 5,
     },
 
     managementButton: {
@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         flexDirection: 'row',
         justifyContent: 'space-around',
+        elevation: 5,
     },
 
     featureText: {

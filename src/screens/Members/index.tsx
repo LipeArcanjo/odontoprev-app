@@ -53,6 +53,7 @@ export default function Members() {
 
     return (
         <View style={styles.container}>
+            <View style={styles.halfCircle} />
             <Text style={styles.title}>Membros da Equipe</Text>
             <FlatList
                 data={teamMembers}
@@ -66,48 +67,75 @@ export default function Members() {
 }
 
 const styles = StyleSheet.create({
+    // BOLOTA PRA ESTILIZAR
+    halfCircle: {
+        width: '56%',
+        height: 180,
+        backgroundColor: '#007AFF',
+        borderBottomRightRadius: 20,
+        borderBottomLeftRadius: 20,
+        transform: [{ scaleX: 2 }],
+
+        // Pra tirar ela do container
+        position: 'absolute',
+        top: 0,
+        left: 103,
+    },
+
+    // CONTAINER
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
         paddingHorizontal: 20,
-        paddingTop: 30,
+        paddingTop: 70,
     },
+
+    // TÍTULO
     title: {
         fontFamily: 'Inter_700Bold',
-        fontSize: 28,
-        color: '#0E4A67',
+        fontSize: 32,
+        color: '#FFF',
         marginBottom: 25,
         textAlign: 'center',
     },
+    
+    // STYLES DOS CARDS
+
     listContainer: {
         paddingBottom: 20,
     },
+
     card: {
+        height: 200,
         flexDirection: 'row',
-        backgroundColor: '#F0F4F8',
+        backgroundColor: '#fff',
+        borderWidth: 3,
+        borderColor: '#F0F4F8',
         borderRadius: 12,
         padding: 15,
         marginBottom: 15,
         alignItems: 'center',
-        shadowColor: '#00000033',
-        shadowOpacity: 0.2,
-        shadowOffset: { width: 0, height: 2 },
-        shadowRadius: 4,
+        elevation: 2
     },
+
     avatar: {
         width: 60,
         height: 60,
         borderRadius: 30,
         marginRight: 20,
+        elevation: 5,
     },
+
     info: {
         flex: 1,
     },
+
     name: {
         fontFamily: 'Inter_700Bold',
-        fontSize: 18,
+        fontSize: 20,
         color: '#0D1B34',
     },
+
     infoText: {
         fontFamily: 'Inter_400Regular',
         fontSize: 14,
