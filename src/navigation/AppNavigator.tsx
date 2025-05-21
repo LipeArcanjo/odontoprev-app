@@ -10,6 +10,9 @@ import Members from '../screens/Members';
 import Beneficiarios from '@/screens/Beneficiarios';
 import BeneficiariosData from '@/screens/Beneficiarios/BeneficiariosData';
 import BeneficiariosCadastro from '@/screens/Beneficiarios/BeneficiariosCadastro';
+import Tratamentos from '@/screens/Tratamentos';
+import TratamentosData from '@/screens/Tratamentos/TratamentosData';
+import TratamentosCadastro from '@/screens/Tratamentos/TratamentosCadastro';
 
 import BottomNav from '../components/BottomNav';
 
@@ -42,6 +45,9 @@ export default function AppNavigator() {
         <Stack.Screen name="Beneficiarios" component={ScreenWithNav(Beneficiarios)} />
         <Stack.Screen name="BeneficiariosData" component={ScreenWithNav(BeneficiariosData)} />
         <Stack.Screen name="BeneficiariosCadastro" component={ScreenWithNav(BeneficiariosCadastro)} />
+        <Stack.Screen name="Tratamentos" component={ScreenWithNav(Tratamentos)} />
+        <Stack.Screen name="TratamentosData" component={ScreenWithNav(TratamentosData)} />
+        <Stack.Screen name="TratamentosCadastro" component={ScreenWithNav(TratamentosCadastro)} />
         {/* Ir adicionado aqui o resto, conforme a implementação de novas telas */}
 
       </Stack.Navigator>
