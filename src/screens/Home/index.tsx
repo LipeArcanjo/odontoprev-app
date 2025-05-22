@@ -1,9 +1,22 @@
-import React from 'react';
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons, FontAwesome5 } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function HomeScreen({ navigation }: any) {
+    const [userEmail, setUserEmail] = useState('');
+
+    useEffect(() => {
+        const loadUserEmail = async () => {
+            const email = await AsyncStorage.getItem('@userEmail');
+            if (email) {
+                setUserEmail(email);
+            }
+        };
+        loadUserEmail();
+    }, []);
+
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.halfCircle} />
@@ -14,7 +27,7 @@ export default function HomeScreen({ navigation }: any) {
                     <View>
                         <Text style={styles.helloText}>Olá,</Text>
                         {/* Lembrar de implementar a função de username dinâmico após integração com login do firebase ↓ */}
-                        <Text style={styles.userName}>Felipe</Text>
+                        <Text style={styles.userName}>{userEmail}</Text>
                     </View>
                     <Ionicons name="person-circle" size={40} color="white" style={styles.userIcon} />
                 </View>
@@ -22,12 +35,12 @@ export default function HomeScreen({ navigation }: any) {
                 {/* Cards de resumo */}
                 <View style={styles.summaryContainer}>
                     <View style={styles.card}>
-                        <FontAwesome5 name="hospital-user" color="#000" size={30}/>
+                        <FontAwesome5 name="hospital-user" color="#000" size={30} />
                         <Text style={styles.cardNumber}>1.245</Text>
                         <Text style={styles.cardLabel}>Qtd. Beneficiários</Text>
                     </View>
                     <View style={styles.card}>
-                        <FontAwesome5 name="procedures" color="#000" size={30}/>
+                        <FontAwesome5 name="procedures" color="#000" size={30} />
                         <Text style={styles.cardNumber}>17</Text>
                         <Text style={styles.cardLabel}>Qtd. Tratamentos</Text>
                     </View>

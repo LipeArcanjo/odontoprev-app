@@ -1,15 +1,28 @@
 import React, { useState } from 'react';
 import { View, Text, TextInput, StyleSheet, Image, TouchableOpacity, SafeAreaView } from 'react-native';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { auth } from '@/services/firebaseConfig'
+
 
 export default function Login({ navigation }: any) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const handleLogin = () => {
-        // Somente uma função de login temporária, na qual será substituída quando a integração com o Firebase for feita
-        console.log('Email:', email);
-        console.log('Password:', password);
-        navigation.navigate('Home'); // Navegação após login
+    const handleLogin = async () => {
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+
+            // Salvar o email no AsyncStorage
+            await AsyncStorage.setItem('@userEmail', user.email ?? '');
+
+            navigation.navigate('Home');
+        } catch (error: any) {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            console.log(errorCode,errorMessage)
+        }
     };
 
     return (
@@ -47,7 +60,7 @@ export default function Login({ navigation }: any) {
             </View>
 
             {/* Efeito meia bola na parte inferior */}
-            <View style={styles.halfCircle}/>
+            <View style={styles.halfCircle} />
         </SafeAreaView>
     );
 }
@@ -90,7 +103,7 @@ const styles = StyleSheet.create({
         color: '#000',
     },
 
-    forgotPassword:{
+    forgotPassword: {
         color: '#207198',
         textAlign: 'center',
         fontSize: 16,
@@ -119,7 +132,7 @@ const styles = StyleSheet.create({
         height: 180,
         backgroundColor: '#204280',
         borderRadius: 120,
-        transform: [{scaleX: 2}],
+        transform: [{ scaleX: 2 }],
 
         // Pra tirar ela do container
         position: 'absolute',
