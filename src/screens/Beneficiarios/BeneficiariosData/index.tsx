@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebaseConfig';
 
 
@@ -38,6 +38,16 @@ export default function BeneficiariosData({ navigation }: any) {
         fetchBeneficiarios();
     }, []);
 
+    const excluirBeneficiario = async (id: string) => {
+        try {
+            await deleteDoc(doc(db, 'beneficiarios', id));
+
+            // Atualiza a lista no estado
+            setBeneficiarios((prev) => prev.filter((item) => item.id !== id));
+        } catch (error) {
+            console.error('Erro ao excluir beneficiário:', error);
+        }
+    };
 
     const renderItem = ({ item }: any) => (
         <View style={styles.card}>
@@ -47,27 +57,40 @@ export default function BeneficiariosData({ navigation }: any) {
                 </Text>
                 <Text style={styles.infoText}>Data de nascimento: {item.dataNascimento}</Text>
                 <Text style={styles.infoText}>Gênero: {item.genero}</Text>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={() =>
-                        alert(
-                            `Detalhes do Beneficiário:\n\n` +
-                            `ID: ${item.id}\n` +
-                            `Nome: ${item.nome}\n` +
-                            `Data de Nascimento: ${item.dataNascimento}\n` +
-                            `Gênero: ${item.genero}\n` +
-                            `Email: ${item.email}\n` +
-                            `Endereço: ${item.endereco}\n` +
-                            `Telefone: ${item.telefone}`
-                        )
-                    }
-                    activeOpacity={0.7}
-                >
-                    <Text style={styles.buttonText}>Exibir detalhes</Text>
-                </TouchableOpacity>
+                <View style={{ flex: 1, flexDirection: 'row' , alignItems: 'center'}}>
+
+                    <TouchableOpacity
+                        style={styles.buttonDetails}
+                        onPress={() =>
+                            alert(
+                                `Detalhes do Beneficiário:\n\n` +
+                                `ID: ${item.id}\n` +
+                                `Nome: ${item.nome}\n` +
+                                `Data de Nascimento: ${item.dataNascimento}\n` +
+                                `Gênero: ${item.genero}\n` +
+                                `Email: ${item.email}\n` +
+                                `Endereço: ${item.endereco}\n` +
+                                `Telefone: ${item.telefone}`
+                            )
+                        }
+                        activeOpacity={0.7}
+                    >
+                        <Text style={styles.buttonText}>Exibir detalhes</Text>
+                    </TouchableOpacity>
+
+                    {/* Botão de excluir */}
+                    <TouchableOpacity
+                        onPress={() => excluirBeneficiario(item.id)}
+                        style={styles.deleteButton}
+                        activeOpacity={0.7}
+                    >
+                        <FontAwesome5 name="trash-alt" size={24} color="#ff4d4d" />
+                    </TouchableOpacity>
+                </View>
             </View>
         </View>
     );
+
 
     return (
         <View style={styles.container}>
@@ -188,13 +211,14 @@ const styles = StyleSheet.create({
         marginTop: 4,
     },
 
-    button: {
+    buttonDetails: {
         marginTop: 12,
         backgroundColor: '#F3F6F9',
         paddingVertical: 10,
         borderRadius: 8,
-        width: '100%',
+        width: '80%',
         alignItems: 'center',
+        height: 50,
     },
     buttonText: {
         color: '#4894FE',
@@ -202,4 +226,11 @@ const styles = StyleSheet.create({
         fontSize: 16,
         opacity: 1,
     },
+
+    deleteButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginLeft: 24,
+    },
+
 });

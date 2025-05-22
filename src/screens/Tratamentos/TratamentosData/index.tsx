@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
 import { db } from '@/services/firebaseConfig';
 
 interface Tratamento {
@@ -35,6 +35,15 @@ export default function TratamentosData({ navigation }: any) {
         fetchTratamentos();
     }, []);
 
+    const excluirTratamento = async (id: string) => {
+        try {
+            await deleteDoc(doc(db, 'tratamentos', id));
+            setTratamentos((prev) => prev.filter((t) => t.id !== id));
+        } catch (error) {
+            console.error('Erro ao excluir tratamento:', error);
+        }
+    };
+
     const renderItem = ({ item }: { item: Tratamento }) => (
         <View style={styles.card}>
             <View style={styles.info}>
@@ -45,6 +54,14 @@ export default function TratamentosData({ navigation }: any) {
                 <Text style={styles.infoText}>Tipo: {item.tipo}</Text>
                 <Text style={styles.infoText}>Custo: {item.custo}</Text>
             </View>
+
+            <TouchableOpacity
+                onPress={() => excluirTratamento(item.id)}
+                style={styles.deleteButton}
+                activeOpacity={0.7}
+            >
+                <FontAwesome5 name="trash-alt" size={22} color="#ff4d4d" />
+            </TouchableOpacity>
         </View>
     );
 
@@ -158,5 +175,13 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: '#207198',
         marginTop: 4,
+    },
+
+    // BOTÕES
+
+    deleteButton: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: 24,
     },
 });
