@@ -1,15 +1,9 @@
 import React, { useState } from 'react';
-import {
-    View,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    StyleSheet,
-    SafeAreaView,
-    Alert,
-} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/services/firebaseConfig';
 
 export default function BeneficiariosCadastro() {
     const navigation = useNavigation();
@@ -21,57 +15,57 @@ export default function BeneficiariosCadastro() {
     const [genero, setGenero] = useState('');
     const [telefone, setTelefone] = useState('');
 
-    const handleCadastro = () => {
+    const handleCadastro = async () => {
         console.log('Validando campos antes do cadastro...');
         if (!nome.trim()) {
             Alert.alert('Erro', 'Por favor, preencha o nome.');
-            console.log('Nome vazio');
             return;
         }
         if (!email.trim()) {
             Alert.alert('Erro', 'Por favor, preencha o e-mail.');
-            console.log('Email vazio');
             return;
         }
         if (!endereco.trim()) {
             Alert.alert('Erro', 'Por favor, preencha o endereço.');
-            console.log('Endereço vazio');
             return;
         }
         if (!dataNascimento.trim()) {
             Alert.alert('Erro', 'Por favor, preencha a data de nascimento.');
-            console.log('Data de nascimento vazio');
             return;
         }
         if (!genero.trim()) {
             Alert.alert('Erro', 'Por favor, preencha o gênero.');
-            console.log('Gênero vazio');
             return;
         }
         if (!telefone.trim()) {
             Alert.alert('Erro', 'Por favor, preencha o telefone.');
-            console.log('Telefone vazio');
             return;
         }
 
-        console.log('Todos os campos preenchidos, prosseguindo com cadastro...');
-        Alert.alert(
-            'Cadastro realizado',
-            `\nNome: ${nome}
-            \nEmail: ${email}
-            \nEndereço: ${endereco}
-            \nData de nascimento: ${dataNascimento}
-            \nGênero: ${genero}
-            \nTelefone: ${telefone}`
-        );
+        try {
+            await addDoc(collection(db, 'beneficiarios'), {
+                nome,
+                email,
+                endereco,
+                dataNascimento,
+                genero,
+                telefone,
+                criadoEm: new Date()
+            });
 
-        setNome('');
-        setEmail('');
-        setEndereco('');
-        setDataNascimento('');
-        setGenero('');
-        setTelefone('');
+            Alert.alert('Sucesso', 'Beneficiário cadastrado com sucesso!');
+            setNome('');
+            setEmail('');
+            setEndereco('');
+            setDataNascimento('');
+            setGenero('');
+            setTelefone('');
+        } catch (error) {
+            console.error('Erro ao cadastrar beneficiário:', error);
+            Alert.alert('Erro', 'Não foi possível cadastrar o beneficiário.');
+        }
     };
+
 
 
     return (

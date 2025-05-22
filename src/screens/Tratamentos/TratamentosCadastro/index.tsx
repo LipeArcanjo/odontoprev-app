@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Aler
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { collection, addDoc } from 'firebase/firestore';
-import { db } from '@/services/firebaseConfig'; // ajuste conforme seu path
+import { db } from '@/services/firebaseConfig';
 
 export default function TratamentosCadastro() {
     const navigation = useNavigation();
