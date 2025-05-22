@@ -1,78 +1,63 @@
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/services/firebaseConfig';
 
-// Só to deixando assim até integrar api do firebase!
-const beneficiarios = [
-    {
-        id: '1',
-        name: 'Enzo Lucas',
-        birthday: '28/04/2016',
-        genre: 'M',
-        email: 'enzo.lucas@email.com',
-        address: 'Rua das Flores, 123',
-        phone: '(11) 99999-1111',
-    },
-    {
-        id: '2',
-        name: 'Cleiton Santos',
-        birthday: '17/04/2004',
-        genre: 'M',
-        email: 'cleiton.santos@email.com',
-        address: 'Avenida Central, 456',
-        phone: '(21) 98888-2222',
-    },
-    {
-        id: '3',
-        name: 'Elisangela Cristina',
-        birthday: '03/01/1985',
-        genre: 'F',
-        email: 'elisangela.cristina@email.com',
-        address: 'Rua das Palmeiras, 789',
-        phone: '(31) 97777-3333',
-    },
-    {
-        id: '4',
-        name: 'Jorge da Silva',
-        birthday: '07/06/1972',
-        genre: 'M',
-        email: 'jorge.silva@email.com',
-        address: 'Travessa dos Pinheiros, 101',
-        phone: '(41) 96666-4444',
-    },
-    {
-        id: '5',
-        name: 'Valentina Menina',
-        birthday: '29/09/2018',
-        genre: 'F',
-        email: 'valentina.menina@email.com',
-        address: 'Praça das Acácias, 202',
-        phone: '(51) 95555-5555',
-    },
-];
+interface Beneficiario {
+    id: string;
+    nome: string;
+    dataNascimento: string;
+    genero: string;
+    email: string;
+    endereco: string;
+    telefone: string;
+}
 
 export default function BeneficiariosData({ navigation }: any) {
+    const [beneficiarios, setBeneficiarios] = useState<Beneficiario[]>([]);
+
+    useEffect(() => {
+        const fetchBeneficiarios = async () => {
+            try {
+                const snapshot = await getDocs(collection(db, 'beneficiarios'));
+                const data: Beneficiario[] = snapshot.docs.map((doc) => {
+                    const docData = doc.data() as Omit<Beneficiario, 'id'>;
+                    return {
+                        id: doc.id,
+                        ...docData,
+                    };
+                });
+                setBeneficiarios(data);
+            } catch (error) {
+                console.error('Erro ao buscar beneficiários:', error);
+            }
+        };
+
+        fetchBeneficiarios();
+    }, []);
+
+
     const renderItem = ({ item }: any) => (
         <View style={styles.card}>
             <View style={styles.info}>
                 <Text style={styles.name}>
-                    <FontAwesome5 name="user-alt" size={20} />{' '}
-                    {item.name}
+                    <FontAwesome5 name="user-alt" size={20} /> {item.nome}
                 </Text>
-                <Text style={styles.infoText}>Data de nascimento: {item.birthday}</Text>
-                <Text style={styles.infoText}>Gênero: {item.genre}</Text>
-                {/* Botão de exibir detalhes */}
+                <Text style={styles.infoText}>Data de nascimento: {item.dataNascimento}</Text>
+                <Text style={styles.infoText}>Gênero: {item.genero}</Text>
                 <TouchableOpacity
                     style={styles.button}
                     onPress={() =>
                         alert(
                             `Detalhes do Beneficiário:\n\n` +
                             `ID: ${item.id}\n` +
-                            `Nome: ${item.name}\n` +
-                            `Data de Nascimento: ${item.birthday}\n` +
-                            `Gênero: ${item.genre}\n` +
+                            `Nome: ${item.nome}\n` +
+                            `Data de Nascimento: ${item.dataNascimento}\n` +
+                            `Gênero: ${item.genero}\n` +
                             `Email: ${item.email}\n` +
-                            `Endereço: ${item.address}\n` +
-                            `Telefone: ${item.phone}`
+                            `Endereço: ${item.endereco}\n` +
+                            `Telefone: ${item.telefone}`
                         )
                     }
                     activeOpacity={0.7}
