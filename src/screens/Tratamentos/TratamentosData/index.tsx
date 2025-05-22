@@ -1,49 +1,53 @@
+import { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, FlatList, TouchableOpacity } from 'react-native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { collection, getDocs } from 'firebase/firestore';
+import { db } from '@/services/firebaseConfig';
 
-// Só to deixando assim até integrar api do firebase!
-const tratamentos = [
-    {
-        id: '1',
-        description: 'Limpeza',
-        type: 'Preventivo',
-        cost: 'R$ 150',
-    },
-    {
-        id: '2',
-        description: 'Clareamento',
-        type: 'Estético',
-        cost: 'R$ 600',
-    },
-    {
-        id: '3',
-        description: 'Extração de ciso',
-        type: 'Cirúrgico',
-        cost: 'R$ 350',
-    },
-    {
-        id: '4',
-        description: 'Aparelho dentário',
-        type: 'Preventivo',
-        cost: 'R$ 1200',
-    },
-    
-];
+interface Tratamento {
+    id: string;
+    descricao: string;
+    tipo: string;
+    custo: string;
+}
+
 
 export default function TratamentosData({ navigation }: any) {
-    const renderItem = ({ item }: any) => (
+    const [tratamentos, setTratamentos] = useState<Tratamento[]>([]);
+
+    useEffect(() => {
+        const fetchTratamentos = async () => {
+            try {
+                const snapshot = await getDocs(collection(db, 'tratamentos'));
+                const data: Tratamento[] = snapshot.docs.map((doc) => {
+                    const docData = doc.data() as Omit<Tratamento, 'id'>;
+                    return {
+                        id: doc.id,
+                        ...docData,
+                    };
+                });
+                setTratamentos(data);
+            } catch (error) {
+                console.error('Erro ao buscar tratamentos:', error);
+            }
+        };
+
+        fetchTratamentos();
+    }, []);
+
+    const renderItem = ({ item }: { item: Tratamento }) => (
         <View style={styles.card}>
             <View style={styles.info}>
                 <Text style={styles.id}>
-                    <FontAwesome5 name="procedures" size={20} />{' ID: '}
-                    {item.id}
+                    <FontAwesome5 name="procedures" size={20} /> {item.descricao}
                 </Text>
-                <Text style={styles.infoText}>Descrição: {item.description}</Text>
-                <Text style={styles.infoText}>Tipo: {item.type}</Text>
-                <Text style={styles.infoText}>Custo: {item.cost}</Text>
+                <Text style={styles.infoText}>ID: {item.id}</Text>
+                <Text style={styles.infoText}>Tipo: {item.tipo}</Text>
+                <Text style={styles.infoText}>Custo: {item.custo}</Text>
             </View>
         </View>
     );
+
 
     return (
         <View style={styles.container}>

@@ -4,6 +4,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 import { collection, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebaseConfig';
 
+
 interface Beneficiario {
     id: string;
     nome: string;
