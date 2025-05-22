@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
-import {View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert} from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, SafeAreaView, Alert } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { FontAwesome5 } from '@expo/vector-icons';
+import { collection, addDoc } from 'firebase/firestore';
+import { db } from '@/services/firebaseConfig'; // ajuste conforme seu path
 
 export default function TratamentosCadastro() {
     const navigation = useNavigation();
@@ -10,37 +12,39 @@ export default function TratamentosCadastro() {
     const [tipo, setTipo] = useState('');
     const [custo, setCusto] = useState('');
 
-    const handleCadastro = () => {
+    const handleCadastro = async () => {
         console.log('Validando campos antes do cadastro...');
         if (!descricao.trim()) {
             Alert.alert('Erro', 'Por favor, preencha a descrição.');
-            console.log('Nome vazio');
             return;
         }
         if (!tipo.trim()) {
             Alert.alert('Erro', 'Por favor, preencha o tipo.');
-            console.log('Email vazio');
             return;
         }
         if (!custo.trim()) {
             Alert.alert('Erro', 'Por favor, preencha o custo.');
-            console.log('Endereço vazio');
             return;
         }
 
-        console.log('Todos os campos preenchidos, prosseguindo com cadastro...');
-        Alert.alert(
-            'Cadastro realizado',
-            `\nDescrição: ${descricao}
-            \nTipo: ${tipo}
-            \nCusto: ${custo}`
-        );
+        try {
+            // Grava no Firestore
+            await addDoc(collection(db, 'tratamentos'), {
+                descricao,
+                tipo,
+                custo,
+                criadoEm: new Date()
+            });
 
-        setDescricao('');
-        setTipo('');
-        setCusto('');
+            Alert.alert('Sucesso', 'Tratamento cadastrado com sucesso!');
+            setDescricao('');
+            setTipo('');
+            setCusto('');
+        } catch (error) {
+            console.error('Erro ao cadastrar:', error);
+            Alert.alert('Erro', 'Não foi possível cadastrar o tratamento.');
+        }
     };
-
 
     return (
         <SafeAreaView style={styles.container}>
